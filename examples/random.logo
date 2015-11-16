@@ -1,0 +1,59 @@
+SPEED 0
+
+IMPORT shape.logo
+
+PEN_UP
+IMPORT setPosition.logo
+
+HOME
+CLEAR FFFFFFFF
+
+setPosition(X,2*Y-12)
+setAngle(90)
+PEN_DOWN
+
+
+PROGRAM star2(number, size)
+{   
+   ROTATE 180/number
+
+   REPEAT number
+   {      
+      FORWARD size
+      ROTATE -360/number
+      FORWARD size
+      ROTATE 720/number
+   }   
+
+   ROTATE -180/number
+}
+
+CLEAR FFFFFFFF
+
+SPEED 40
+PEN_UP
+LET x = X
+LET y = Y
+HOME
+LET width = 2*X
+LET height = 2*Y
+setPosition(x, y)
+PEN_DOWN
+
+REPEAT 10
+{   
+   LET xx = random*width
+   LET yy = random*height
+
+   PEN_UP
+   setPosition(xx, yy)
+   PEN_DOWN
+
+   star2(random*7+3, 56)
+}
+
+
+PEN_UP
+setPosition(random*width, random*height)
+SPEED 1234567
+FILL FFFF0000,0

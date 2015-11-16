@@ -1,0 +1,138 @@
+SPEED 0
+
+LET speedColor = 1234567
+LET speed = 10
+
+IMPORT setPosition.logo
+
+CLEAR FFFFFFFF
+LET fwd = 100
+LET an = 10
+
+PEN_UP
+HOME
+setPosition(X-123, Y-123)
+setAngle(-90)
+PEN_DOWN
+
+SPEED speed
+
+REPEAT 100
+{   
+   FORWARD fwd
+   ROTATE an
+
+   LET fwd = 2*fwd*cos(an)
+   LET an = 360*cos(fwd)
+}
+
+PEN_UP
+HOME
+PEN_DOWN
+
+SPEED speedColor
+FILL FF0000FF,0
+SPEED speed
+
+PEN_UP
+HOME
+setPosition(X-123, Y-123)
+setAngle(-90)
+PEN_DOWN
+
+REPEAT 100
+{   
+   FORWARD fwd
+   ROTATE an
+
+   LET fwd = 2*fwd*cos(an)
+   LET an = 360*sin(fwd)
+}
+
+PEN_UP
+HOME
+PEN_DOWN
+
+SPEED speedColor
+FILL FFFF0000,0
+
+//
+
+SPEED 40
+
+PEN_UP
+HOME
+setPosition(X-123, Y-123)
+setAngle(-90)
+PEN_DOWN
+
+SPEED speed
+
+REPEAT 100
+{   
+   FORWARD fwd
+   ROTATE an
+
+   LET fwd = 2*fwd*sin(an)
+   LET an = 360*cos(fwd)
+}
+
+PEN_UP
+HOME
+PEN_DOWN
+
+SPEED speedColor
+FILL FF00FF00,0
+SPEED speed
+
+PEN_UP
+HOME
+setPosition(X-123, Y-123)
+setAngle(-90)
+PEN_DOWN
+
+REPEAT 100
+{   
+   FORWARD fwd
+   ROTATE an
+
+   LET fwd = 2*fwd*sin(an)
+   LET an = 360*sin(fwd)
+}
+
+PEN_UP
+HOME
+PEN_DOWN
+
+SPEED speedColor
+FILL FFFF00FF,0
+SPEED speed
+
+
+PEN_UP
+HOME
+LET zeroX = X
+LET zeroY = 20
+LET size = 100
+LET x = zeroX-size/2
+LET xx = x-zeroX
+setPosition(x, (xx*xx+zeroY)
+PEN_DOWN
+
+REPEAT size
+{   
+LET xx = x-zeroX
+   setPosition(x, xx*xx+zeroY)
+   LET x = x+1
+}
+
+PEN_UP
+HOME
+FORWARD 20
+PEN_DOWN
+
+SPEED speedColor
+FILL FF00FFFF,0
+SPEED speed
+
+HOME

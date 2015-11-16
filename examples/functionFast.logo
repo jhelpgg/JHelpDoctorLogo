@@ -1,0 +1,140 @@
+SPEED 0
+
+LET speedColor = 0
+LET speed = 0
+
+IMPORT setPosition.logo
+
+CLEAR FFFFFFFF
+
+// X^2
+
+PEN_UP
+HOME
+LET zeroX = X
+LET zeroY = Y - 23
+LET size = 25
+LET x = -20
+LET y = x*x
+setPosition(x*10+zeroX, y+zeroY)
+PEN_DOWN
+
+SPEED speed
+REPEAT size*20
+{   
+   setPosition(x*10+zeroX, y+zeroY)
+   LET x = x+0.1
+   LET y = x*x
+}
+
+PEN_UP
+HOME
+SPEED speedColor
+FILL FFFF0000,0
+SPEED speed
+PEN_DOWN
+
+// X^3
+
+PEN_UP
+HOME
+LET zeroX = X
+LET zeroY = Y - 23
+LET size = 25
+LET x = -20
+LET y = x*x*x
+setPosition(x*10+zeroX, y+zeroY)
+PEN_DOWN
+
+SPEED speed
+REPEAT size*20
+{   
+   setPosition(x*10+zeroX, y+zeroY)
+   LET x = x+0.1
+   LET y = x*x*x
+}
+
+COLOR FFFF0000
+PEN_UP
+HOME
+setPosition(2*X,2*Y)
+PEN_DOWN
+//setPosition(0,0)
+COLOR FF000000
+
+PEN_UP
+HOME
+SPEED speedColor
+FILL FF00FF00,0
+SPEED speed
+PEN_DOWN
+
+// EXP(X)
+
+PEN_UP
+HOME
+LET zeroX = X
+LET zeroY = Y - 23
+LET size = 25
+LET x = -20
+LET y = exp(x)
+setPosition(x*10+zeroX, y+zeroY)
+PEN_DOWN
+
+SPEED speed
+REPEAT size*20
+{   
+   setPosition(x*10+zeroX, y+zeroY)
+   LET x = x+0.1
+   LET y = exp(x)
+}
+
+COLOR FF00FF00
+PEN_UP
+HOME
+setPosition(2*X,2*Y)
+PEN_DOWN
+//setPosition(0,0)
+COLOR FF000000
+
+PEN_UP
+HOME
+SPEED speedColor
+FILL FF0000FF,0
+SPEED speed
+PEN_DOWN
+
+// cos(X)
+
+PEN_UP
+HOME
+LET zeroX = X
+LET zeroY = Y - 23
+LET size = 25
+LET x = -20
+LET y = 100*cos(x)
+setPosition(x*10+zeroX, y+zeroY)
+PEN_DOWN
+
+SPEED speed
+REPEAT size*20
+{   
+   setPosition(x*10+zeroX, y+zeroY)
+   LET x = x+0.1
+   LET y = 100*cos(x)
+}
+
+COLOR FF0000FF
+PEN_UP
+HOME
+setPosition(2*X,2*Y)
+PEN_DOWN
+setPosition(0,0)
+COLOR FF000000
+
+PEN_UP
+HOME
+SPEED speedColor
+FILL FFFFFF00,0
+SPEED speed
+PEN_DOWN

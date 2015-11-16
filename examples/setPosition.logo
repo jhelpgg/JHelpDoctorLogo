@@ -1,0 +1,21 @@
+PROGRAM setAngle(angle)
+{   
+   ROTATE angle-ANGLE
+}
+
+PROGRAM setPosition(x,y)
+{   
+   LET angleStart = ANGLE
+
+   LET vx= x - X
+   LET vy= y - Y
+   LET length = exp(0.5*ln(vx*vx+vy*vy))
+   LET vx=vx/length
+   LET vy=vy/length
+   LET angle=COMPUTE_ANGLE vy,vx
+
+   setAngle(angle)
+   FORWARD length
+
+   setAngle(angleStart)
+}

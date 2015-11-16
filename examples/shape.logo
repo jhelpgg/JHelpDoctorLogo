@@ -1,0 +1,47 @@
+SPEED 0
+
+IMPORT setPosition.logo
+
+HOME
+CLEAR FFFFFFFF
+
+PROGRAM shape(number, angle, size)
+{   
+   REPEAT number
+   {      
+      FORWARD size
+      ROTATE angle
+   }   
+}
+
+PROGRAM regular(number, size)
+{   
+   shape(number, 360/number, size)
+}
+
+PROGRAM star(number, size)
+{   
+   ROTATE 180/number
+   shape(number, 720/number, size)
+   ROTATE -180/number
+}
+
+PROGRAM super(number, size)
+{   
+   COLOR FF000000
+   regular(number, size)
+   COLOR FFFF0000
+   star(number, 2*size*cos(PI/number))
+   COLOR FF000000
+}
+
+super(5,123)
+
+PEN_UP
+setPosition(X-50,Y-50)
+PEN_DOWN
+
+FILL FF00FF00,0
+
+PEN_UP
+HOME

@@ -1,0 +1,55 @@
+SPEED 0
+
+IMPORT shape.logo
+
+PEN_UP
+IMPORT setPosition.logo
+
+HOME
+CLEAR FFFFFFFF
+
+setPosition(X,2*Y-12)
+setAngle(90)
+PEN_DOWN
+
+
+PROGRAM star2(number, size)
+{   
+   ROTATE 180/number
+
+   REPEAT number
+   {      
+      FORWARD size
+      ROTATE -360/number
+      FORWARD size
+      ROTATE 720/number
+   }   
+
+   ROTATE -180/number
+}
+
+CLEAR FFFFFFFF
+
+SPEED 40
+
+LET a = 5
+LET move = 50
+
+REPEAT 8
+{   
+   star2(a, 23)
+
+   PEN_UP
+   setPosition(X,Y-move)
+   setAngle(90)
+   PEN_DOWN
+
+   LET a = a+1
+   LET move = move +20
+}
+
+PEN_UP
+setPosition(123, 123)
+SPEED 1234567
+FILL FFFF0000,0
+SPEED 0

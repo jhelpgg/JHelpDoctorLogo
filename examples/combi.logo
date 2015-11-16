@@ -1,0 +1,17 @@
+SPEED 0
+
+IMPORT shape.logo
+
+PEN_UP
+IMPORT setPosition.logo
+
+HOME
+CLEAR FFFFFFFF
+
+setPosition(2*X-12,Y)
+setAngle(90)
+PEN_DOWN
+
+SPEED 123
+
+super(5,123)

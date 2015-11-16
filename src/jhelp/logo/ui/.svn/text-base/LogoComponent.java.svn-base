@@ -1,0 +1,358 @@
+/**
+ * Project : JHelpDoctorLogo<br>
+ * Package : jhelp.logo.ui<br>
+ * Class : LogoComponent<br>
+ * Date : 11 sept. 2010<br>
+ * By JHelp
+ */
+package jhelp.logo.ui;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.geom.Line2D;
+import java.awt.image.BufferedImage;
+
+import javax.swing.JComponent;
+
+import jhelp.logo.language.Language;
+import jhelp.logo.language.Turtle;
+import jhelp.util.list.Queue;
+
+/**
+ * Logo component that show logo script result, can be use as ordinary swing
+ * component<br>
+ * <br>
+ * Last modification : 11 sept. 2010<br>
+ * Version 0.0.0<br>
+ * 
+ * @author JHelp
+ */
+public class LogoComponent
+      extends JComponent
+{
+	/** Temporary line */
+	private static final Line2D.Double LINE  = new Line2D.Double(0, 0, 0, 0);
+	/** Temporary line */
+	private static final Line2D.Double LINE2 = new Line2D.Double(0, 0, 0, 0);
+
+	/** Turtle to use */
+	private Turtle                     turtle;
+	/** Component screen width */
+	private int                        screenWidth;
+	/** Component screen height */
+	private int                        screenHeight;
+	/** Image where draw */
+	private BufferedImage              bufferedImage;
+	/** Graphics context link to the image where draw */
+	private Graphics2D                 graphics2D;
+	/** Script interpreter */
+	private Language                   language;
+
+	/**
+	 * Constructs LogoComponent
+	 * 
+	 * @param screenWidth Component width
+	 * @param screenHeight Component height
+	 */
+	public LogoComponent(int screenWidth, int screenHeight)
+	{
+		this.screenWidth = screenWidth;
+		this.screenHeight = screenHeight;
+
+		this.turtle = new Turtle(screenWidth, screenHeight);
+		this.language = new Language(this.turtle, this);
+
+		this.bufferedImage = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
+		this.graphics2D = this.bufferedImage.createGraphics();
+		this.graphics2D.setColor(Color.WHITE);
+		this.graphics2D.fillRect(0, 0, screenWidth, screenHeight);
+
+		this.setSize(screenWidth, screenHeight);
+	}
+
+	/**
+	 * Clear component with one color
+	 * 
+	 * @param color Color to use
+	 */
+	public void clear(int color)
+	{
+		final int[] pixels = new int[this.screenWidth * this.screenHeight];
+
+		for(int pix = pixels.length; --pix >= 0;)
+		{
+			pixels[pix] = color;
+		}
+
+		this.bufferedImage.setRGB(0, 0, this.screenWidth, this.screenHeight, pixels, 0,
+		      this.screenWidth);
+		this.refresh();
+	}
+
+	/**
+	 * Refresh the component
+	 */
+	public void refresh()
+	{
+		this.bufferedImage.flush();
+		this.repaint();
+	}
+
+	/**
+	 * Call each time component's bounds change
+	 * 
+	 * @param x X of up left corner
+	 * @param y Y of up left corner
+	 * @param width Width
+	 * @param height Height
+	 * @see java.awt.Component#setBounds(int, int, int, int)
+	 */
+	public void setBounds(int x, int y, int width, int height)
+	{
+		Dimension dimension = new Dimension(width, height);
+		this.setPreferredSize(dimension);
+		this.setMaximumSize(dimension);
+		this.setMinimumSize(dimension);
+
+		super.setBounds(x, y, width, height);
+
+		if(this.screenWidth != width && this.screenHeight != height)
+		{
+			this.refresh();
+
+			BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+			this.graphics2D = bufferedImage.createGraphics();
+			this.graphics2D.setColor(Color.WHITE);
+			this.graphics2D.fillRect(0, 0, width, height);
+			this.graphics2D.drawImage(this.bufferedImage, (width - this.screenWidth) >> 1,
+			      (height - this.screenHeight) >> 1, null);
+
+			this.bufferedImage = bufferedImage;
+			this.screenWidth = width;
+			this.screenHeight = height;
+
+			this.turtle.setScreenSize(width, height);
+
+			this.refresh();
+		}
+	}
+
+	/**
+	 * Paint the component
+	 * 
+	 * @param g Graphics context
+	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+	 */
+	protected void paintComponent(Graphics g)
+	{
+		if(this.bufferedImage != null)
+		{
+			g.drawImage(this.bufferedImage, 0, 0, null);
+		}
+
+		if(this.turtle != null && this.turtle.isVisible() == true)
+		{
+			g.setColor(new Color(this.turtle.getColor(), true));
+
+			LogoComponent.LINE.x1 = this.turtle.getX();
+			LogoComponent.LINE.y1 = this.turtle.getY();
+			final double angleTurtle = this.turtle.getAngle();
+
+			double angle = Math.toRadians(angleTurtle + 150);
+			LogoComponent.LINE.x2 = LogoComponent.LINE.x1 + 20 * Math.cos(angle);
+			LogoComponent.LINE.y2 = LogoComponent.LINE.y1 + 20 * Math.sin(angle);
+			((Graphics2D) g).draw(LogoComponent.LINE);
+
+			angle = Math.toRadians(angleTurtle - 150);
+			LogoComponent.LINE.x2 = LogoComponent.LINE.x1 + 20 * Math.cos(angle);
+			LogoComponent.LINE.y2 = LogoComponent.LINE.y1 + 20 * Math.sin(angle);
+			((Graphics2D) g).draw(LogoComponent.LINE);
+		}
+	}
+
+	/**
+	 * Draw a line
+	 * 
+	 * @param startX Start point X
+	 * @param startY Start point Y
+	 * @param endX End point X
+	 * @param endY End point Y
+	 * @param color Line color
+	 */
+	public void drawLine(double startX, double startY, double endX, double endY, Color color)
+	{
+		this.graphics2D.setColor(color);
+
+		LogoComponent.LINE2.x1 = startX;
+		LogoComponent.LINE2.y1 = startY;
+		LogoComponent.LINE2.x2 = endX;
+		LogoComponent.LINE2.y2 = endY;
+
+		this.graphics2D.draw(LogoComponent.LINE2);
+	}
+
+	/**
+	 * Fill with a color
+	 * 
+	 * @param x Start X
+	 * @param y Start Y
+	 * @param color Color to use
+	 * @param near Precision for fill
+	 */
+	public void fill(double x, double y, int color, int near)
+	{
+		int xx = (int) Math.round(x);
+		int yy = (int) Math.round(y);
+
+		if(xx < 0 || yy < 0 || xx >= this.screenWidth || yy >= this.screenHeight)
+		{
+			return;
+		}
+
+		if(near < 0)
+		{
+			near = 0;
+		}
+
+		int[] pixels = new int[this.screenWidth * this.screenHeight];
+		pixels = this.bufferedImage.getRGB(0, 0, this.screenWidth, this.screenHeight, pixels, 0,
+		      this.screenWidth);
+
+		int backColor = pixels[xx + yy * this.screenWidth];
+		int backRed = backColor >> 16 & 0xFF;
+		int backGreen = backColor >> 8 & 0xFF;
+		int backBlue = backColor & 0xFF;
+
+		if(Math.abs((color >> 16 & 0xFF) - backRed) <= near
+		      && Math.abs((color >> 8 & 0xFF) - backGreen) <= near
+		      && Math.abs((color & 0xFF) - backBlue) <= near)
+		{
+			return;
+		}
+
+		pixels[xx + yy * this.screenWidth] = color;
+
+		Queue<Point> queue = new Queue<Point>();
+		Point point = new Point(xx, yy);
+		queue.inQueue(point);
+		int col;
+		int pos;
+
+		int time = 0;
+		int refresh = Integer.MAX_VALUE;
+		if(this.turtle.getSpeed() > 0)
+		{
+			refresh = (Integer.MAX_VALUE - 1) / this.turtle.getSpeed();
+		}
+
+		while(queue.isEmpty() == false)
+		{
+			point = queue.outQueue();
+			pos = point.x + point.y * this.screenWidth;
+
+			if(point.x > 0)
+			{
+				col = pixels[pos - 1];
+
+				if(Math.abs((col >> 16 & 0xFF) - backRed) <= near
+				      && Math.abs((col >> 8 & 0xFF) - backGreen) <= near
+				      && Math.abs((col & 0xFF) - backBlue) <= near)
+				{
+					pixels[pos - 1] = color;
+					queue.inQueue(new Point(point.x - 1, point.y));
+				}
+			}
+
+			if(point.x < this.screenWidth - 1)
+			{
+				col = pixels[pos + 1];
+
+				if(Math.abs((col >> 16 & 0xFF) - backRed) <= near
+				      && Math.abs((col >> 8 & 0xFF) - backGreen) <= near
+				      && Math.abs((col & 0xFF) - backBlue) <= near)
+				{
+					pixels[pos + 1] = color;
+					queue.inQueue(new Point(point.x + 1, point.y));
+				}
+			}
+
+			if(point.y > 0)
+			{
+				col = pixels[pos - this.screenWidth];
+
+				if(Math.abs((col >> 16 & 0xFF) - backRed) <= near
+				      && Math.abs((col >> 8 & 0xFF) - backGreen) <= near
+				      && Math.abs((col & 0xFF) - backBlue) <= near)
+				{
+					pixels[pos - this.screenWidth] = color;
+					queue.inQueue(new Point(point.x, point.y - 1));
+				}
+			}
+
+			if(point.y < this.screenHeight - 1)
+			{
+				col = pixels[pos + this.screenWidth];
+
+				if(Math.abs((col >> 16 & 0xFF) - backRed) <= near
+				      && Math.abs((col >> 8 & 0xFF) - backGreen) <= near
+				      && Math.abs((col & 0xFF) - backBlue) <= near)
+				{
+					pixels[pos + this.screenWidth] = color;
+					queue.inQueue(new Point(point.x, point.y + 1));
+				}
+			}
+
+			time = (time + 1) % refresh;
+
+			if(time == 0)
+			{
+				this.bufferedImage.setRGB(0, 0, this.screenWidth, this.screenHeight, pixels, 0,
+				      this.screenWidth);
+
+				this.refresh();
+			}
+		}
+
+		this.bufferedImage.setRGB(0, 0, this.screenWidth, this.screenHeight, pixels, 0,
+		      this.screenWidth);
+
+		pixels = null;
+
+		this.refresh();
+	}
+
+	/**
+	 * Language interpreter linked
+	 * 
+	 * @return Language interpreter linked
+	 */
+	public Language getLanguage()
+	{
+		return this.language;
+	}
+
+	/**
+	 * Force terminate interpretation
+	 */
+	public void terminate()
+	{
+		this.language.terminate();
+	}
+
+	/**
+	 * Call when JVM destroy the object
+	 * 
+	 * @throws Throwable On issue
+	 * @see java.lang.Object#finalize()
+	 */
+	protected void finalize()
+	      throws Throwable
+	{
+		this.language.terminate();
+
+		super.finalize();
+	}
+}

@@ -1,0 +1,31 @@
+SPEED 0
+
+IMPORT setPosition.logo
+
+PROGRAM cross(number, size)
+{
+   LET angle = 360/number
+
+   REPEAT number
+   {
+      FORWARD size
+      ROTATE angle
+      FORWARD size
+      ROTATE -angle
+      FORWARD size
+      ROTATE angle
+   }
+}
+
+
+HOME
+setPosition(2*X-12, Y)
+CLEAR FFFFFFFF
+
+SPEED 123
+
+cross(13, 50)
+
+PEN_UP
+HOME
+FILL FFFF0000,0
