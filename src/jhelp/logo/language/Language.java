@@ -1,9 +1,12 @@
 /**
- * Project : JHelpDoctorLogo<br>
- * Package : jhelp.logo.language<br>
- * Class : Language<br>
- * Date : 12 sept. 2010<br>
- * By JHelp
+ * <h1>License :</h1> <br>
+ * The following code is deliver as is. I take care that code compile and work, but I am not responsible about any damage it may
+ * cause.<br>
+ * You can use, modify, the code as your need for any usage. But you can't do any action that avoid me or other person use,
+ * modify this code. The code is free for usage and modification, you can't change that fact.<br>
+ * <br>
+ * 
+ * @author JHelp
  */
 package jhelp.logo.language;
 
@@ -489,6 +492,14 @@ public class Language
       double tempDouble = 0;
       String instruction;
       int countProg = 0;
+
+      if(this.lines.isEmpty() == true)
+      {
+         if(this.languageSpy != null)
+         {
+            this.languageSpy.finished();
+         }
+      }
 
       while((index < this.lines.size()) && (this.finish == false))
       {
