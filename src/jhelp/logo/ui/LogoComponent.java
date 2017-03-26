@@ -103,7 +103,7 @@ public class LogoComponent
          g.drawImage(this.bufferedImage.getImage(), 0, 0, null);
       }
 
-      if((this.turtle != null) && (this.turtle.isVisible() == true))
+      if((this.turtle != null) && (this.turtle.isVisible()))
       {
          g.setColor(new Color(this.turtle.getColor(), true));
 

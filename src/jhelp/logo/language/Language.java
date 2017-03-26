@@ -327,11 +327,11 @@ public class Language
       Y(Instructions.Y, "Y", "Current turtle Y position. Can be use only inside <expression>"), ;
 
       /** Full description */
-      private String description;
+      private final String description;
       /** Key word name */
-      private String name;
+      private final String name;
       /** Short description */
-      private String shortDecsiption;
+      private final String shortDecsiption;
 
       /**
        * Constructs KeyWord
@@ -463,11 +463,11 @@ public class Language
       final StringTokenizer stringTokenizer = new StringTokenizer(block, ";\n\r", false);
       String part;
 
-      while(stringTokenizer.hasMoreElements() == true)
+      while(stringTokenizer.hasMoreElements())
       {
          part = stringTokenizer.nextToken().trim();
 
-         if((part.length() > 0) && (part.startsWith("//") == false))
+         if((part.length() > 0) && (!part.startsWith("//")))
          {
             this.lines.add(part);
          }
@@ -477,7 +477,7 @@ public class Language
    /**
     * Exceute the current script
     */
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings({"unchecked", "ConstantConditions"})
    void runExecute()
    {
       String line;
@@ -493,7 +493,7 @@ public class Language
       String instruction;
       int countProg = 0;
 
-      if(this.lines.isEmpty() == true)
+      if(this.lines.isEmpty())
       {
          if(this.languageSpy != null)
          {
@@ -501,7 +501,7 @@ public class Language
          }
       }
 
-      while((index < this.lines.size()) && (this.finish == false))
+      while((index < this.lines.size()) && (!this.finish))
       {
          line = this.lines.elementAt(index);
 
@@ -528,7 +528,7 @@ public class Language
          if(mode != Mode.REGISTER_PROGRAM)
          {
             // LET
-            if(Language.Instructions.LET.equals(instruction) == true)
+            if(Instructions.LET.equals(instruction))
             {
                tempInt1 = line.indexOf('=', indexSpace);
 
@@ -541,7 +541,7 @@ public class Language
                   tempString1 = line.substring(indexSpace + 1, tempInt1).trim();
                   tempString2 = line.substring(tempInt1 + 1).trim();
 
-                  if(tempString2.startsWith(Language.Instructions.COMPUTE_ANGLE) == true)
+                  if(tempString2.startsWith(Instructions.COMPUTE_ANGLE))
                   {
                      tempInt1 = tempString2.indexOf(' ');
                      if(tempInt1 < 0)
@@ -563,7 +563,7 @@ public class Language
                            final double x = this.computeValue(context, tempString2.substring(tempInt2 + 1));
 
                            tempDouble = -Math.toDegrees(Math.atan2(y, x));
-                           if(Double.isNaN(tempDouble) == true)
+                           if(Double.isNaN(tempDouble))
                            {
                               Debug.println(DebugLevel.WARNING, "Error in evaluate value of line ", index - 1,
                                     " a parameter is not define or a parameter have illegal value (divide by zero, ln of <=0 number, ...) : ", line);
@@ -574,7 +574,7 @@ public class Language
                   else
                   {
                      tempDouble = this.computeValue(context, tempString2);
-                     if(Double.isNaN(tempDouble) == true)
+                     if(Double.isNaN(tempDouble))
                      {
                         Debug.println(DebugLevel.WARNING, "Error in evaluate value of line ", index - 1,
                               " a parameter is not define or a parameter have illegal value (divide by zero, ln of <=0 number, ...) : ", line);
@@ -585,7 +585,7 @@ public class Language
                }
             }
             // FORWARD
-            else if(Language.Instructions.FORWARD.equals(instruction) == true)
+            else if(Instructions.FORWARD.equals(instruction))
             {
                if(indexSpace < 0)
                {
@@ -597,7 +597,7 @@ public class Language
 
                   tempDouble = this.computeValue(context, tempString1);
 
-                  if(Double.isNaN(tempDouble) == true)
+                  if(Double.isNaN(tempDouble))
                   {
                      Debug.println(DebugLevel.WARNING, "Error in evaluate value of line ", index - 1,
                            " a parameter is not define or a parameter have illegal value (divide by zero, ln of <=0 number, ...) : ", line);
@@ -612,7 +612,7 @@ public class Language
                      final double endX = startX + (tempDouble * Math.cos(angle));
                      final double endY = startY + (tempDouble * Math.sin(angle));
 
-                     if(this.turtle.draw == true)
+                     if(this.turtle.draw)
                      {
                         this.logoGraphics.drawLine(startX, startY, endX, endY, this.turtle.color);
                      }
@@ -625,7 +625,7 @@ public class Language
                }
             }
             // ROTATE
-            else if(Language.Instructions.ROTATE.equals(instruction) == true)
+            else if(Instructions.ROTATE.equals(instruction))
             {
                if(indexSpace < 0)
                {
@@ -637,7 +637,7 @@ public class Language
 
                   tempDouble = this.computeValue(context, tempString1);
 
-                  if(Double.isNaN(tempDouble) == true)
+                  if(Double.isNaN(tempDouble))
                   {
                      Debug.println(DebugLevel.WARNING, "Error in evaluate value of line ", index - 1,
                            " a parameter is not define or a parameter have illegal value (divide by zero, ln of <=0 number, ...) : ", line);
@@ -661,7 +661,7 @@ public class Language
                }
             }
             // COLOR
-            else if(Language.Instructions.COLOR.equals(instruction) == true)
+            else if(Instructions.COLOR.equals(instruction))
             {
                if(indexSpace < 0)
                {
@@ -687,33 +687,33 @@ public class Language
                }
             }
             // PEN_DOWN
-            else if(Language.Instructions.PEN_DOWN.equals(instruction) == true)
+            else if(Instructions.PEN_DOWN.equals(instruction))
             {
                this.turtle.draw = true;
                turtleInstruction = true;
             }
             // PEN_UP
-            else if(Language.Instructions.PEN_UP.equals(instruction) == true)
+            else if(Instructions.PEN_UP.equals(instruction))
             {
                this.turtle.draw = false;
                turtleInstruction = true;
             }
             // VISIBLE
-            else if(Language.Instructions.VISIBLE.equals(instruction) == true)
+            else if(Instructions.VISIBLE.equals(instruction))
             {
                this.turtle.visible = true;
 
                turtleInstruction = true;
             }
             // HIDE
-            else if(Language.Instructions.HIDE.equals(instruction) == true)
+            else if(Instructions.HIDE.equals(instruction))
             {
                this.turtle.visible = false;
 
                turtleInstruction = true;
             }
             // HOME
-            else if(Language.Instructions.HOME.equals(instruction) == true)
+            else if(Instructions.HOME.equals(instruction))
             {
                final double startX = this.turtle.x;
                final double startY = this.turtle.y;
@@ -721,7 +721,7 @@ public class Language
                final double endX = this.turtle.screenWidth >> 1;
                final double endY = this.turtle.screenHeight >> 1;
 
-               if(this.turtle.draw == true)
+               if(this.turtle.draw)
                {
                   this.logoGraphics.drawLine(startX, startY, endX, endY, this.turtle.color);
                }
@@ -733,7 +733,7 @@ public class Language
                turtleInstruction = true;
             }
             // CLEAR
-            else if(Language.Instructions.CLEAR.equals(instruction) == true)
+            else if(Instructions.CLEAR.equals(instruction))
             {
                if(indexSpace < 0)
                {
@@ -754,7 +754,7 @@ public class Language
                }
             }
             // SPEED
-            else if(Language.Instructions.SPEED.equals(instruction) == true)
+            else if(Instructions.SPEED.equals(instruction))
             {
                if(indexSpace < 0)
                {
@@ -766,7 +766,7 @@ public class Language
 
                   tempDouble = this.computeValue(context, tempString1);
 
-                  if(Double.isNaN(tempDouble) == true)
+                  if(Double.isNaN(tempDouble))
                   {
                      Debug.println(DebugLevel.WARNING, "Error in evaluate value of line ", index - 1,
                            " a parameter is not define or a parameter have illegal value (divide by zero, ln of <=0 number, ...) : ", line);
@@ -778,7 +778,7 @@ public class Language
                }
             }
             // REPEAT
-            else if(Language.Instructions.REPEAT.equals(instruction) == true)
+            else if(Instructions.REPEAT.equals(instruction))
             {
                if(indexSpace < 0)
                {
@@ -790,7 +790,7 @@ public class Language
 
                   tempDouble = this.computeValue(context, tempString1);
 
-                  if(Double.isNaN(tempDouble) == true)
+                  if(Double.isNaN(tempDouble))
                   {
                      Debug.println(DebugLevel.WARNING, "Error in evaluate value of line ", index - 1,
                            " a parameter is not define or a parameter have illegal value (divide by zero, ln of <=0 number, ...) : ", line);
@@ -800,7 +800,7 @@ public class Language
                      final int time = (int) Math.round(tempDouble);
                      line = this.lines.elementAt(index++);
 
-                     if(line.equals("{") == false)
+                     if(!line.equals("{"))
                      {
                         Debug.println(DebugLevel.ERROR, "No open brace { affter REPEAT in line " + (index - 2));
                      }
@@ -813,7 +813,7 @@ public class Language
                         {
                            line = this.lines.elementAt(index++);
 
-                           if(line.equals("}") == true)
+                           if(line.equals("}"))
                            {
                               if(count <= 0)
                               {
@@ -822,7 +822,7 @@ public class Language
 
                               count--;
                            }
-                           else if(line.equals("{") == true)
+                           else if(line.equals("{"))
                            {
                               count++;
                            }
@@ -840,9 +840,9 @@ public class Language
                }
             }
             // }
-            else if(instruction.equals("}") == true)
+            else if(instruction.equals("}"))
             {
-               if((stack.isEmpty() == true) || (this.parameters.isEmpty() == true))
+               if((stack.isEmpty()) || (this.parameters.isEmpty()))
                {
                   Debug.println(DebugLevel.ERROR, "Unexpected } at ", index - 1);
                }
@@ -886,9 +886,9 @@ public class Language
                }
             }
             // PROGRAM
-            else if(Language.Instructions.PROGRAM.equals(instruction) == true)
+            else if(Instructions.PROGRAM.equals(instruction))
             {
-               if((stack.isEmpty() == false) || (mode == Mode.CALL_PROGRAM))
+               if((!stack.isEmpty()) || (mode == Mode.CALL_PROGRAM))
                {
                   Debug.println(DebugLevel.ERROR, "Can't declare program inside PROGRAM or REPEAT at ", index - 1, " : ", line);
                }
@@ -919,7 +919,7 @@ public class Language
                   {
                      line = this.lines.elementAt(index++);
 
-                     if(line.equals("{") == false)
+                     if(!line.equals("{"))
                      {
                         Debug.println(DebugLevel.ERROR, "No open brace { affter PROGRAM in line " + (index - 2));
                      }
@@ -935,7 +935,7 @@ public class Language
                }
             }
             // IMPORT
-            else if(Language.Instructions.IMPORT.equals(instruction) == true)
+            else if(Instructions.IMPORT.equals(instruction))
             {
                tempString1 = line.substring(indexSpace + 1).trim();
 
@@ -945,7 +945,7 @@ public class Language
                int insert = index;
                InputStream inputStream = null;
 
-               if(tempString1.startsWith("http://") == true)
+               if(tempString1.startsWith("http://"))
                {
                   try
                   {
@@ -957,7 +957,7 @@ public class Language
                      Debug.printException(exception, "Can't load : ", tempString1);
                   }
                }
-               else if(tempString1.startsWith("file://") == true)
+               else if(tempString1.startsWith("file://"))
                {
                   try
                   {
@@ -987,17 +987,17 @@ public class Language
                         {
                            pathElement = stringTokenizer.nextToken();
 
-                           if(pathElement.equals("..") == true)
+                           if(pathElement.equals(".."))
                            {
                               file = file.getParentFile();
                            }
-                           else if(pathElement.equals(".") == false)
+                           else if(!pathElement.equals("."))
                            {
                               file = new File(file, pathElement);
                            }
                         }
 
-                        if(file.exists() == true)
+                        if(file.exists())
                         {
                            inputStream = new FileInputStream(file);
                         }
@@ -1025,7 +1025,7 @@ public class Language
                      {
                         lig = lig.trim();
 
-                        if((lig.length() > 0) && (lig.startsWith("//") == false))
+                        if((lig.length() > 0) && (!lig.startsWith("//")))
                         {
                            this.lines.insertElementAt(lig, insert++);
                         }
@@ -1045,7 +1045,7 @@ public class Language
                         {
                            bufferedReader.close();
                         }
-                        catch(final Exception exception2)
+                        catch(final Exception ignored)
                         {
                         }
                      }
@@ -1053,7 +1053,7 @@ public class Language
                }
             }
             // FILL
-            else if(Language.Instructions.FILL.equals(instruction) == true)
+            else if(Instructions.FILL.equals(instruction))
             {
                tempInt1 = line.indexOf(',', indexSpace + 1);
                if(tempInt1 < 0)
@@ -1070,7 +1070,7 @@ public class Language
                      final int color = UtilText.parseHexaString(tempString1);
                      final double value = this.computeValue(context, tempString2);
 
-                     if(Double.isNaN(value) == true)
+                     if(Double.isNaN(value))
                      {
                         Debug.println(DebugLevel.ERROR, "Couldn't evaluate line :", line);
                      }
@@ -1112,7 +1112,7 @@ public class Language
                      final double[] values = new double[stringTokenizer.countTokens()];
                      int i = 0;
 
-                     while(stringTokenizer.hasMoreTokens() == true)
+                     while(stringTokenizer.hasMoreTokens())
                      {
                         values[i++] = this.computeValue(context, stringTokenizer.nextToken());
                      }
@@ -1136,7 +1136,7 @@ public class Language
                      {
                         i = 0;
 
-                        while(stringTokenizer.hasMoreTokens() == true)
+                        while(stringTokenizer.hasMoreTokens())
                         {
                            context.put(stringTokenizer.nextToken().trim(), values[i++]);
                         }
@@ -1153,11 +1153,11 @@ public class Language
          }
          else
          {
-            if(line.equals("{") == true)
+            if(line.equals("{"))
             {
                countProg++;
             }
-            else if(line.equals("}") == true)
+            else if(line.equals("}"))
             {
                if(countProg <= 0)
                {
@@ -1170,7 +1170,7 @@ public class Language
             }
          }
 
-         if((mode != Mode.REGISTER_PROGRAM) && (turtleInstruction == true))
+         if((mode != Mode.REGISTER_PROGRAM) && (turtleInstruction))
          {
             this.logoGraphics.refresh();
 
@@ -1183,7 +1183,7 @@ public class Language
                   {
                      this.lines.wait(this.turtle.speed);
                   }
-                  catch(final Exception exception)
+                  catch(final Exception ignored)
                   {
                   }
                   this.waiting = false;
@@ -1191,7 +1191,7 @@ public class Language
             }
          }
 
-         if((index >= this.lines.size()) && (this.finish == false))
+         if((index >= this.lines.size()) && (!this.finish))
          {
             this.logoGraphics.refresh();
 
@@ -1207,7 +1207,7 @@ public class Language
                {
                   this.lines.wait();
                }
-               catch(final Exception exception)
+               catch(final Exception ignored)
                {
                }
                this.waiting = false;
@@ -1241,7 +1241,7 @@ public class Language
     */
    public void appendBlocks(final String... blocks)
    {
-      if(this.finish == true)
+      if(this.finish)
       {
          return;
       }
@@ -1260,7 +1260,7 @@ public class Language
       {
          synchronized(this.lines)
          {
-            if(this.waiting == true)
+            if(this.waiting)
             {
                this.lines.notify();
             }
@@ -1344,7 +1344,7 @@ public class Language
 
       synchronized(this.lines)
       {
-         if(this.waiting == true)
+         if(this.waiting)
          {
             this.lines.notify();
          }
